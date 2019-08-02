@@ -1157,7 +1157,11 @@ cassAddForeignUpdateTargets(Query *parsetree,
 	 */
 	for (i = 0; i < tupdesc->natts; ++i)
 	{
+#if PG_VERSION_NUM < 110000
 		Form_pg_attribute att = tupdesc->attrs[i];
+#else
+		Form_pg_attribute att = TupleDescAttr(tupdesc, i);
+#endif
 		AttrNumber attrno = att->attnum;
 
 		if (strncmp(NameStr(att->attname), primary_key, strlen(primary_key))
@@ -1252,7 +1256,11 @@ cassPlanForeignModify(PlannerInfo *root,
 
 		for (attnum = 1; attnum <= tupdesc->natts; attnum++)
 		{
+#if PG_VERSION_NUM < 110000
 			Form_pg_attribute attr = tupdesc->attrs[attnum - 1];
+#else
+			Form_pg_attribute attr = TupleDescAttr(tupdesc, attnum - 1);
+#endif
 
 			if (!attr->attisdropped)
 				targetAttrs = lappend_int(targetAttrs, attnum);
@@ -1411,7 +1419,11 @@ static void cassBeginForeignModify(ModifyTableState *mtstate,
 		foreach(lc, fmstate->target_attrs)
 		{
 			int			attnum = lfirst_int(lc);
+#if PG_VERSION_NUM < 110000
 			Form_pg_attribute attr = RelationGetDescr(rel)->attrs[attnum - 1];
+#else
+			Form_pg_attribute attr = TupleDescAttr(RelationGetDescr(rel), attnum - 1);
+#endif
 
 			Assert(!attr->attisdropped);
 
@@ -1443,7 +1455,12 @@ static void cassBeginForeignModify(ModifyTableState *mtstate,
 		attnum = get_attnum(rel->rd_id, primaryKey);
 		elog(DEBUG5, CSTAR_FDW_NAME ": The PK attribute number is %d", attnum);
 
+#if PG_VERSION_NUM < 110000
 		attr = RelationGetDescr(rel)->attrs[attnum - 1];
+#else
+		attr = TupleDescAttr(RelationGetDescr(rel), attnum - 1);
+#endif
+
 
 		Assert(strncmp(NameStr(attr->attname), primaryKey, strlen(primaryKey))
 		       == 0);
