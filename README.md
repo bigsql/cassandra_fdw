@@ -31,9 +31,10 @@ sudo yum update
 sudo yum install libuv-devel
 
 ## install CPP-DRIVER
-CPP_DIR=http://downloads.datastax.com/cpp-driver/centos/7/cassandra/v2.9.0
-sudo yum install $CPP_DIR/cassandra-cpp-driver-2.9.0-1.el7.centos.x86_64.rpm
-sudo yum install $CPP_DIR/cassandra-cpp-driver-devel-2.9.0-1.el7.centos.x86_64.rpm
+cppV=2.13.0
+CPP_DIR=http://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$cppV
+sudo yum install $CPP_DIR/cassandra-cpp-driver-$cppV-1.el7.x86_64.rpm
+sudo yum install $CPP_DIR/cassandra-cpp-driver-devel-$cppV-1.el7.x86_64.rpm
 ```
 
 ### Build and Install the FDW ###
