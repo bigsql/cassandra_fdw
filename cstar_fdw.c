@@ -1718,6 +1718,7 @@ fetch_more_data(ForeignScanState *node)
 {
 	CassFdwScanState *fsstate = (CassFdwScanState *) node->fdw_state;
 	MemoryContext oldcontext;
+	CassFuture* 	result_future = NULL;
 
 	/*
 	 * We'll store the tuples in the batch_cxt.  First, flush the previous
@@ -1729,7 +1730,7 @@ fetch_more_data(ForeignScanState *node)
 
 	{
 		cass_statement_set_consistency(fsstate->statement, fsstate->read_consistency);
-		CassFuture* result_future = cass_session_execute(fsstate->cass_conn, fsstate->statement);
+		result_future = cass_session_execute(fsstate->cass_conn, fsstate->statement);
 		if (cass_future_error_code(result_future) == CASS_OK)
 		{
 			const CassResult* res;
