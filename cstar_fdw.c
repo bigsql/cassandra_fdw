@@ -1055,10 +1055,15 @@ cassIterateForeignScan(ForeignScanState *node)
 	/*
 	 * Return the next tuple.
 	 */
-	ExecStoreTuple(fsstate->tuples[fsstate->next_tuple++],
-				   slot,
-				   InvalidBuffer,
-				   false);
+#if PG_VERSION_NUM < 120000
+	ExecStoreTuple(
+		fsstate->tuples[fsstate->next_tuple++],
+		slot, InvalidBuffer, false);
+#else
+	ExecStoreHeapTuple(
+		fsstate->tuples[fsstate->next_tuple++],
+		slot, false);
+#endif
 
 	return slot;
 }
