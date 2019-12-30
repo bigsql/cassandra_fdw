@@ -1247,7 +1247,7 @@ cassPlanForeignModify(PlannerInfo *root,
 	 * use NoLock here.
 	 */
 
-#if PG_VERSION_NUM < 12
+#if PG_VERSION_NUM < 120000
 	rel = heap_open(rte->relid, NoLock);
 #else
 	rel = table_open(rte->relid, NoLock);
