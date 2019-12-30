@@ -136,7 +136,7 @@ cassDeparseColumnRef(StringInfo buf, int varno, int varattno, PlannerInfo *root)
 	 * option, use attribute name.
 	 */
 	if (colname == NULL)
-		colname = get_relid_attribute_name(rte->relid, varattno);
+		colname = get_attname(rte->relid, varattno, false);
 
 	appendStringInfoString(buf, quote_identifier(colname));
 }
