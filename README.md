@@ -1,7 +1,7 @@
 cassandra_fdw
 =============
 
-Foreign Data Wrapper for read/write access to [Cassandra](http://cassandra.apache.org/) 3+ from within [Postgres](http://www.postgresql.org/) 10+.
+Foreign Data Wrapper for read/write access to [Cassandra](http://cassandra.apache.org/) 3+ from within [Postgres](http://www.postgresql.org/) 11+.
 
 [*DATATYPES*](DATATYPES.md)
 
@@ -31,7 +31,7 @@ sudo yum update
 sudo yum install libuv-devel
 
 ## install CPP-DRIVER
-cppV=2.13.0
+cppV=2.14.1
 CPP_DIR=http://downloads.datastax.com/cpp-driver/centos/7/cassandra/v$cppV
 sudo yum install $CPP_DIR/cassandra-cpp-driver-$cppV-1.el7.x86_64.rpm
 sudo yum install $CPP_DIR/cassandra-cpp-driver-devel-$cppV-1.el7.x86_64.rpm
