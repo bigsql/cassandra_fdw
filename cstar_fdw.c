@@ -3,7 +3,7 @@
  * cstar_fdw.c
  *                cassandra_fdw.
  *
- * Copyright (c) 2014-2018, BigSQL
+ * Copyright (c) 2014-2020, BigSQL
  * Portions Copyright (c) 2012-2018, PostgreSQL Global Development Group & Others
  *
  * IDENTIFICATION
@@ -19,7 +19,9 @@
 #include <time.h>
 
 #include "cstar_fdw.h"
-
+#if PG_VERSION_NUM >= 120000
+	#include "access/table.h"
+#endif
 #include "access/htup_details.h"
 #include "access/reloptions.h"
 #include "access/sysattr.h"
@@ -43,7 +45,11 @@
 #include "optimizer/pathnode.h"
 #include "optimizer/planmain.h"
 #include "optimizer/restrictinfo.h"
-#include "optimizer/var.h"
+#if PG_VERSION_NUM < 120000
+	#include "optimizer/var.h"
+#else
+	#include "optimizer/optimizer.h"
+#endif
 #include "parser/parsetree.h"
 #include "storage/fd.h"
 #include "storage/ipc.h"
@@ -1240,7 +1246,12 @@ cassPlanForeignModify(PlannerInfo *root,
 	 * Core code already has some lock on each rel being planned, so we can
 	 * use NoLock here.
 	 */
+
+#if PG_VERSION_NUM < 12
 	rel = heap_open(rte->relid, NoLock);
+#else
+	rel = table_open(rte->relid, NoLock);
+#endif
 
 	/*
 	 * In an INSERT, we transmit all columns that are defined in the FOREIGN
@@ -1317,8 +1328,11 @@ cassPlanForeignModify(PlannerInfo *root,
 			elog(ERROR, "unexpected operation: %d", (int) operation);
 			break;
 	}
-
+#if PG_VERSION_NUM < 120000
 	heap_close(rel, NoLock);
+#else
+	table_close(rel, NoLock);
+#endif
 
 	/*
 	 * Build the fdw_private list that will be available to the executor.

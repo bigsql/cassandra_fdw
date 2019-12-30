@@ -3,7 +3,7 @@
  * cstar_fdw.h
  *                cassandra_fdw includes.
  *
- * Copyright (c) 2014-2018, BigSQL
+ * Copyright (c) 2014-2020, BigSQL
  * Portions Copyright (c) 2012-2018, PostgreSQL Global Development Group & Others
  *
  * IDENTIFICATION
@@ -19,7 +19,11 @@
 
 #include "foreign/foreign.h"
 #include "lib/stringinfo.h"
-#include "nodes/relation.h"
+#if PG_VERSION_NUM < 120000
+	#include "nodes/relation.h"
+#else
+	#include "nodes/pathnodes.h"
+#endif
 #include "utils/rel.h"
 
 /* User-visible name for logging and reporting purposes */

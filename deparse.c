@@ -10,7 +10,7 @@
  *
  * We schema-qualify all names in this module.
  *
- * Copyright (c) 2014-2018, BigSQL
+ * Copyright (c) 2014-2020, BigSQL
  * Portions Copyright (c) 2012-2015, PostgreSQL Global Development Group & Others
  *
  * IDENTIFICATION
@@ -35,7 +35,11 @@
 #include "commands/defrem.h"
 #include "nodes/nodeFuncs.h"
 #include "optimizer/clauses.h"
-#include "optimizer/var.h"
+#if PG_VERSION_NUM < 120000
+	#include "optimizer/var.h"
+#else
+	#include "optimizer/optimizer.h"
+#endif
 #include "parser/parsetree.h"
 #include "utils/builtins.h"
 #include "utils/lsyscache.h"
